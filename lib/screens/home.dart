@@ -30,7 +30,7 @@ class Home extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               accountEmail: Text(
-                "khaledabozead575@gmail.com",
+                "mohamedramadan@gmail.com",
                 style: TextStyle(fontSize: 16),
               ),
               currentAccountPicture: CircleAvatar(
