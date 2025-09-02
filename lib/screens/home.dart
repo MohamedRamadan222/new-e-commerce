@@ -1,13 +1,19 @@
+import 'package:e_commercet/screens/checkout.dart';
+import 'package:e_commercet/screens/details_screen.dart';
 import 'package:e_commercet/shared/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/item.dart';
+import '../provider/cart.dart';
+import '../shared/custom_row_appbar.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<Cart>(context);
     return Scaffold(
       drawer: Drawer(
         child: Column(
@@ -38,15 +44,22 @@ class Home extends StatelessWidget {
                 "Home",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
             ListTile(
               leading: Icon(Icons.apps, color: abbBarGreen),
               title: Text(
-                "My Projects",
+                "My Products",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (c) => Checkout()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.help_center_outlined, color: abbBarGreen),
@@ -76,53 +89,9 @@ class Home extends StatelessWidget {
         ),
       ),
       appBar: AppBar(
-        title: const Text('Home', style: TextStyle(color: Colors.white)),
+        title: Text('Home', style: TextStyle(color: Colors.white)),
         backgroundColor: abbBarGreen,
-        actions: [
-          Row(
-            children: [
-              Stack(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.add_shopping_cart_outlined,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    top: -3,
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(211, 164, 255, 193),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        "8",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: Text(
-                  "\$ 13",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ],
+        actions: [CustomRowAppbar()],
       ),
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -135,18 +104,28 @@ class Home extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (c) => ProductDetails()));
+              // Add to cart functionality
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (c) => DetailsScreen(product: items[index]),
+                ),
+              );
             },
+
             child: GridTile(
               footer: GridTileBar(
                 backgroundColor: Color.fromARGB(66, 3, 40, 28),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Add to cart functionality
+                    cart.addItem(items[index]);
+                  },
                   color: Color.fromARGB(255, 255, 255, 255),
                   icon: Icon(Icons.add),
                 ),
                 leading: Text(
-                  items[index].price,
+                  "${items[index].price}",
                   style: TextStyle(color: Colors.white),
                 ),
                 title: Text(items[index].name),
